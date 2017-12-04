@@ -5,13 +5,15 @@
 # 23 => 2
 # 1024 => 31
 
-INPUT = 277678  # output: 475
+INPUT = 277678
+# output1: 475
+# output2: ???
 
 DIRECTIONS = {
-    0: (1, 0), # right
-    1: (0, 1),       # up
-    2: (-1, 0),            # left
-    3: (0, -1)            # down
+    0: (1, 0),  # right
+    1: (0, 1),  # up
+    2: (-1, 0), # left
+    3: (0, -1)  # down
 }
 
 class ManhattanDistanceComputer(object):
@@ -20,7 +22,8 @@ class ManhattanDistanceComputer(object):
         return abs(a.x - b.x) + abs(a.y - b.y)
 
 class Cell(object):
-    def __init__(self, val, x, y):
+    def __init__(self, id, val, x, y):
+        self.id = id
         self.val = val
         self.x = x
         self.y = y
@@ -32,12 +35,13 @@ class Cell(object):
         if self.val == 1:
             return True
 
-        return self.val == pow(length * 2 + 1, 2)
+        return self.is_corner() and self.x == length and self.y == -length
 
 
 class SpiralMemory1(object):
     def __init__(self, lenght):
         self.cells = []
+
         self._generate_simple(lenght)
 
     def get_cell(self, val):
@@ -47,11 +51,11 @@ class SpiralMemory1(object):
             return None
 
     def _next_position(self, current_position, dx, dy):
-        return Cell(current_position.val + 1, current_position.x + dx, current_position.y + dy)
+        return Cell(current_position.val + 1, current_position.val + 1, current_position.x + dx, current_position.y + dy)
 
     def _generate_simple(self, length):
 
-        current = Cell(1, 0 , 0)
+        current = Cell(1, 1, 0 , 0)
 
         self.cells.append(current)
         current_direction = 0
@@ -79,4 +83,4 @@ class SpiralMemory1(object):
 mem = SpiralMemory1(INPUT)
 cell = mem.get_cell(INPUT)
 
-print ManhattanDistanceComputer.compute(Cell(1, 0, 0), cell)
+print ManhattanDistanceComputer.compute(Cell(1, 1, 0, 0), cell)
