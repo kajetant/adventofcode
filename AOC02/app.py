@@ -1,8 +1,4 @@
-"""
-As you walk through the door, a glowing humanoid shape yells in your direction. "You there! Your state appears to be idle. Come help us repair the corruption in this spreadsheet - if we take another millisecond, we'll have to display an hourglass cursor!"
-
-The spreadsheet consists of rows of apparently-random numbers. To make sure the recovery process is on the right track, they need you to calculate the spreadsheet's checksum. For each row, determine the difference between the largest value and the smallest value; the checksum is the sum of all of these differences.
-"""
+# http://adventofcode.com/2017/day/2
 
 # FOR:
 # INPUT = """5 1 9 5
@@ -28,21 +24,39 @@ INPUT = """86	440	233	83	393	420	228	491	159	13	110	135	97	238	92	396
 286	2076	243	939	399	451	231	2187	2295	453	1206	2468	2183	230	714	681
 3111	2857	2312	3230	149	3082	408	1148	2428	134	147	620	128	157	492 2879"""
 
-# result: 45158
+# checksum1: 45158
+# checksum2: 294
+
+# FOR:
+# INPUT = """5 9 2 8
+# 9 4 7 3
+# 3 8 6 5"""
+
+# result2:  4 + 3 +2 = 9
+
 
 class ChecksumResolver(object):
     def __init__(self, input):
-        self._data = [ map(lambda x: int(x), row.split()) for row in input.split("\n")]
+        self._data = [map(lambda x: int(x), row.split()) for row in input.split("\n")]
         pass
 
     def _compute_row_checksum1(self, sorted_row):
         return abs(sorted_row[-1] - sorted_row[0])
 
-    def compute_checksum1(self):
-        res = reduce(lambda x, y: x + y, map(lambda row: self._compute_row_checksum1(sorted(row)), self._data))
+    def compute_first_checksum(self):
+        return reduce(lambda x,y: x+y, map(lambda row: self._compute_row_checksum1(sorted(row)), self._data))
 
-        return res
+    def compute_row_checksum2(self, sorted_row):
+        N = len(sorted_row)
 
+        for i in range(0, N - 1):
+            for j in range(i + 1, N):
+                if sorted_row[j] % sorted_row[i] == 0:
+                    return sorted_row[j] / sorted_row[i]
+
+    def compute_second_checksum(self):
+        return reduce(lambda x,y: x+y, map(lambda row: self.compute_row_checksum2(sorted(row)), self._data))
 
 resolver = ChecksumResolver(INPUT)
-print resolver.compute_checksum1()
+print resolver.compute_first_checksum()
+print resolver.compute_second_checksum()
