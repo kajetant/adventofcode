@@ -1,8 +1,8 @@
 import copy
 import operator
 
-INPUT = '2	8	8	5	4	2	3	1	5	5	1	2	15	13	5	14' # result: 3156
-#INPUT = '0  2   7   0' # result: 5
+INPUT = '2	8	8	5	4	2	3	1	5	5	1	2	15	13	5	14' # result: 3156 | 1610
+#INPUT = '0  2   7   0' # result: 5 | 4
 
 snapshots = []
 
@@ -41,7 +41,7 @@ def run_until_inifinite(memory):
         s = create_snapshot(memory)
 
         if s in snapshots:
-            return steps
+            return (steps, steps - snapshots.index(s))
         else:
             snapshots.append(s)
 
@@ -52,5 +52,6 @@ if __name__ == "__main__":
     input = map(lambda x: int(x), INPUT.split())
     N = len(input)
 
-    steps = run_until_inifinite(copy.copy(input))
+    (steps, loop_size) = run_until_inifinite(copy.copy(input))
     print 'Steps to detect inifinite loop: {0}'.format(steps)
+    print 'Loop size: {0}'.format(loop_size)
